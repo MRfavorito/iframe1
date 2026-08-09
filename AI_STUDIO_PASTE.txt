@@ -1,0 +1,388 @@
+═══════════════════════════════════════════════════════════════════════
+ INSTRUCTIONS FOR GHL AI STUDIO — READ BEFORE PROCESSING
+═══════════════════════════════════════════════════════════════════════
+
+The HTML file below this instruction block is FINAL PRODUCTION CODE for
+the HELP. brand website. It has been designed, iterated, and approved
+across multiple sessions. Your job is to deploy it EXACTLY AS WRITTEN.
+
+TREAT THIS AS: source code for immediate deployment.
+DO NOT TREAT AS: a design brief, mockup, or starting point.
+
+═══ REQUIRED BEHAVIOR ═══════════════════════════════════════════════════
+
+1. Replace the entire current landing page with the file below.
+2. Preserve every line, every comment, every CSS variable, every
+   animation, every DOM element, every script block.
+3. Keep the Three.js scene EXACTLY as coded — the tunnel of procedural
+   olive/sage humanoid characters, the runner, the camera at height
+   3.8U looking down the tunnel, the green wipe transition.
+4. Keep the procedural Web Audio API code intact — whoosh, ambient
+   drone, footsteps synced to runner acceleration, C major chord finale.
+5. Keep the home page structure verbatim — cream #F4F1EA background,
+   Instrument Serif + Manrope typography from Google Fonts, sticky nav,
+   hero, manifesto, 2x2 offers grid, dark AI Coaching section, About
+   Martin section, dark footer.
+6. Preserve all section IDs, class names, and DOM structure.
+7. Preserve the "GLB SWAP-IN POINT (PHASE 2)" comment block — I will
+   swap procedural characters for a real GLB model in a later phase.
+
+═══ FORBIDDEN CHANGES ══════════════════════════════════════════════════
+
+DO NOT add any of the following (previous attempts added these against
+the design):
+
+- A sound toggle / mute button (the design intentionally has none)
+- Matrix-style network visualizations
+- Floating cubes, particles, or geometric confetti
+- Radiating lines or concentric rings behind the button
+- Wireframe icosahedrons or other decorative 3D geometry
+- Text elements like "GROWTH" or other words not in the file
+- Loading spinners, tooltips, cursors, or UI elements not in the code
+- Alternate fonts (only Instrument Serif, Manrope, Arial Rounded)
+- Alternate colors (only the CSS variables defined in :root)
+- Additional sections, cards, or content on the home page
+- Any framework wrapping (React, Vue, etc.) — this is plain HTML+JS
+
+═══ IF YOU ARE UNCERTAIN ═══════════════════════════════════════════════
+
+If any part of the code seems incomplete or you would normally "improve"
+it, DO NOT. The design intent is minimal, editorial, and specific.
+Simpler than you would build by default. That is correct.
+
+The tunnel characters look procedurally simple on purpose — they are
+placeholders for a Meshy AI clay model that gets loaded by URL in a
+later phase (see the GLB SWAP-IN POINT comment in the script).
+
+═══ THE FILE — DEPLOY EXACTLY AS WRITTEN ═══════════════════════════════
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>HELP. — Everyone needs it.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --cream:#F4F1EA; --ink:#0F1A0F; --olive:#6B7768;
+    --green-dark:#1F5F2F; --green-bright:#7fda7f;
+    --serif:'Instrument Serif',Georgia,serif;
+    --sans:'Manrope',system-ui,sans-serif;
+    --brand:'Arial Rounded MT Bold','Helvetica Rounded',Arial,sans-serif;
+  }
+  html,body{width:100%;min-height:100%;background:#000;font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  body{overflow-x:hidden}
+
+  #landing{position:fixed;inset:0;z-index:100;background:#000;transition:opacity 1s ease}
+  #landing.gone{opacity:0;pointer-events:none}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;z-index:5}
+  #ui .logo{
+    font-family:var(--brand);font-size:clamp(2.5rem,5vw,4rem);font-weight:800;
+    color:#fff;letter-spacing:.04em;margin-bottom:2rem;opacity:0;
+    animation:fadeUp .8s ease .3s forwards, logoPulse 3s ease-in-out infinite 1.2s;
+  }
+  #cta{
+    pointer-events:auto;padding:1rem 2.5rem;font-family:var(--brand);
+    font-size:clamp(1.1rem,2vw,1.4rem);font-weight:700;letter-spacing:.15em;
+    color:#fff;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);
+    border:1.5px solid rgba(127,218,127,.4);border-radius:999px;cursor:pointer;
+    opacity:0;animation:fadeUp .8s ease .8s forwards;
+    transition:border-color .3s, box-shadow .3s, transform .2s;
+  }
+  #cta:hover{border-color:var(--green-bright);box-shadow:0 0 30px rgba(127,218,127,.5)}
+  #cta:active{transform:scale(.97)}
+  #cta.hidden{opacity:0;pointer-events:none}
+  #wipe{position:absolute;inset:0;background:var(--green-bright);transform:scaleX(0);transform-origin:left center;z-index:20;pointer-events:none}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes logoPulse{0%,100%{text-shadow:0 0 20px rgba(127,218,127,.2)}50%{text-shadow:0 0 40px rgba(127,218,127,.5)}}
+
+  #home{background:var(--cream);color:var(--ink);min-height:100vh;opacity:0;transition:opacity .8s ease .2s}
+  #home.visible{opacity:1}
+  #home[hidden]{display:none}
+
+  nav{position:sticky;top:0;z-index:50;background:rgba(244,241,234,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(15,26,15,.08);padding:1.25rem 2rem;display:flex;justify-content:space-between;align-items:center}
+  nav .brand{font-family:var(--brand);font-weight:800;font-size:1.5rem;letter-spacing:.02em}
+  nav ul{display:flex;gap:2rem;list-style:none}
+  nav a{color:var(--ink);text-decoration:none;font-size:.95rem;font-weight:500;opacity:.75;transition:opacity .2s}
+  nav a:hover{opacity:1}
+
+  section{padding:8rem 2rem;max-width:1200px;margin:0 auto}
+  .eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.2em;color:var(--olive);margin-bottom:1.5rem;font-weight:500}
+  .em{font-family:var(--serif);font-style:italic;color:var(--green-dark);font-weight:400}
+
+  .hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center}
+  .hero h1{font-family:var(--serif);font-size:clamp(3.5rem,9vw,7.5rem);font-weight:400;line-height:1.02;letter-spacing:-.02em;margin-bottom:2rem}
+  .hero p{font-size:clamp(1.15rem,1.8vw,1.4rem);line-height:1.5;max-width:640px;color:rgba(15,26,15,.7);margin-bottom:3rem}
+  .hero .cta-link{font-size:1rem;font-weight:600;color:var(--ink);text-decoration:none;border-bottom:1px solid var(--ink);padding-bottom:2px;transition:color .2s,border-color .2s}
+  .hero .cta-link:hover{color:var(--green-dark);border-color:var(--green-dark)}
+
+  .manifesto{text-align:center;padding-top:6rem;padding-bottom:6rem}
+  .manifesto .mark{color:var(--green-dark);font-weight:600;font-size:.75rem;letter-spacing:.2em;margin-bottom:2rem}
+  .manifesto p{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,3rem);line-height:1.3;font-weight:400;max-width:900px;margin:0 auto}
+
+  .offers .mark{color:var(--green-dark);font-weight:600;font-size:.75rem;letter-spacing:.2em;margin-bottom:1.5rem}
+  .offers h2{font-family:var(--serif);font-size:clamp(2.5rem,5vw,4.5rem);font-weight:400;line-height:1.05;margin-bottom:4rem}
+  .grid{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(15,26,15,.15);border-left:1px solid rgba(15,26,15,.15)}
+  .card{padding:3rem 2.5rem;border-right:1px solid rgba(15,26,15,.15);border-bottom:1px solid rgba(15,26,15,.15);text-decoration:none;color:var(--ink);position:relative;transition:background .3s;cursor:pointer;display:block}
+  .card:hover{background:rgba(15,26,15,.03)}
+  .card:hover .arrow{transform:translate(4px,-4px)}
+  .card .num{font-size:.75rem;letter-spacing:.2em;color:var(--olive);margin-bottom:2rem;font-weight:500}
+  .card h3{font-family:var(--serif);font-style:italic;font-size:2.5rem;font-weight:400;margin-bottom:1rem;color:var(--green-dark)}
+  .card p{font-size:1rem;line-height:1.5;color:rgba(15,26,15,.7)}
+  .arrow{position:absolute;top:2rem;right:2rem;font-size:1.4rem;color:var(--ink);transition:transform .3s}
+
+  .ai-section{background:var(--ink);color:var(--cream);position:relative;overflow:hidden;padding:8rem 2rem}
+  .ai-inner{max-width:1200px;margin:0 auto;position:relative;z-index:2}
+  .ai-glow{position:absolute;top:-200px;right:-200px;width:600px;height:600px;background:radial-gradient(circle,rgba(127,218,127,.15),transparent 70%);pointer-events:none}
+  .pill{display:inline-block;padding:.4rem 1rem;border:1px solid var(--green-bright);color:var(--green-bright);font-size:.7rem;letter-spacing:.2em;border-radius:999px;margin-bottom:2rem;font-weight:600}
+  .ai-section h2{font-family:var(--serif);font-size:clamp(2.5rem,6vw,5.5rem);font-weight:400;line-height:1.05;margin-bottom:2rem;max-width:900px}
+  .ai-section h2 .em{color:var(--green-bright)}
+  .ai-section p{font-size:clamp(1.1rem,1.6vw,1.3rem);line-height:1.5;max-width:680px;color:rgba(244,241,234,.75);margin-bottom:3rem}
+  .btn-ghost{display:inline-block;padding:1rem 2rem;border:1.5px solid var(--green-bright);color:var(--green-bright);text-decoration:none;border-radius:999px;font-weight:600;transition:background .3s,color .3s}
+  .btn-ghost:hover{background:var(--green-bright);color:var(--ink)}
+
+  .about{display:grid;grid-template-columns:1fr 1.2fr;gap:5rem;align-items:center}
+  .about-photo{aspect-ratio:4/5;background:linear-gradient(135deg,#d4d0c4,#a9b2a5);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--olive);font-size:.85rem;letter-spacing:.15em}
+  .about-content .mark{color:var(--green-dark);font-weight:600;font-size:.75rem;letter-spacing:.2em;margin-bottom:1.5rem}
+  .about-content h2{font-family:var(--serif);font-size:clamp(2.5rem,5vw,4rem);font-weight:400;line-height:1.05;margin-bottom:2rem}
+  .about-content p{font-size:1.05rem;line-height:1.6;color:rgba(15,26,15,.75);margin-bottom:1.5rem}
+  .about-content a{color:var(--ink);font-weight:600;border-bottom:1px solid var(--ink);text-decoration:none;padding-bottom:2px}
+  .about-content a:hover{color:var(--green-dark);border-color:var(--green-dark)}
+
+  footer{background:var(--ink);color:var(--cream);padding:5rem 2rem 3rem;text-align:center}
+  footer .wordmark{font-family:var(--brand);font-weight:800;font-size:3rem;margin-bottom:1rem;letter-spacing:.02em}
+  footer .tag{font-family:var(--serif);font-style:italic;color:var(--green-bright);font-size:1.3rem;margin-bottom:3rem}
+  footer .links{display:flex;justify-content:center;gap:2rem;margin-bottom:3rem;flex-wrap:wrap}
+  footer .links a{color:rgba(244,241,234,.7);text-decoration:none;font-size:.9rem;transition:color .2s}
+  footer .links a:hover{color:var(--green-bright)}
+  footer .copy{font-size:.8rem;color:rgba(244,241,234,.4)}
+
+  @media (max-width:768px){
+    section{padding:5rem 1.5rem}
+    nav{padding:1rem 1.25rem}
+    nav ul{gap:1.25rem}
+    nav a{font-size:.85rem}
+    .grid{grid-template-columns:1fr}
+    .about{grid-template-columns:1fr;gap:3rem}
+    .ai-section{padding:5rem 1.5rem}
+  }
+</style>
+</head>
+<body>
+
+<div id="landing">
+  <canvas id="scene"></canvas>
+  <div id="ui">
+    <div class="logo">HELP.</div>
+    <button id="cta">HELP. HELP. HELP.</button>
+  </div>
+  <div id="wipe"></div>
+</div>
+
+<div id="home" hidden>
+  <nav>
+    <div class="brand">HELP.</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#coaching">Coaching</a></li>
+      <li><a href="#speaking">Speaking</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="eyebrow">Leadership · Knowledge · Systems · Community</div>
+    <h1>Everyone needs <span class="em">help.</span></h1>
+    <p>The strongest leaders aren't the ones who have it all figured out. They're the ones brave enough to ask.</p>
+    <a href="#manifesto" class="cta-link">Explore ↓</a>
+  </section>
+
+  <section class="manifesto" id="manifesto">
+    <div class="mark">/01 · MANIFESTO</div>
+    <p>HELP. is a movement. A reminder that asking isn't weakness — it's <span class="em">leadership</span>. Whether you're building a team, growing a business, or reshaping your life, you don't have to do it alone.</p>
+  </section>
+
+  <section class="offers">
+    <div class="mark">/02 · WHERE TO BEGIN</div>
+    <h2>Choose your <span class="em">next step.</span></h2>
+    <div class="grid">
+      <a href="#coaching" class="card"><div class="num">01 / COACHING</div><h3>Coaching</h3><p>Leadership and AI implementation for founders navigating change — with honesty, not hype.</p><span class="arrow">↗</span></a>
+      <a href="#speaking" class="card"><div class="num">02 / SPEAKING</div><h3>Speaking</h3><p>Book Martin for keynotes, panels, and workshops on modern leadership and asking well.</p><span class="arrow">↗</span></a>
+      <a href="#shop" class="card" target="_blank" rel="noopener"><div class="num">03 / SHOP</div><h3>Shop</h3><p>Journals and apparel from H.R. Highly Favored. Wear the mission you're building.</p><span class="arrow">↗</span></a>
+      <a href="#community" class="card"><div class="num">04 / COMMUNITY</div><h3>Community</h3><p>Join a network of leaders redefining what it means to ask — and to answer.</p><span class="arrow">↗</span></a>
+    </div>
+  </section>
+
+  <section class="ai-section">
+    <div class="ai-glow"></div>
+    <div class="ai-inner">
+      <div class="pill">NEW · FLAGSHIP OFFER</div>
+      <h2>AI, without the <span class="em">hype.</span></h2>
+      <p>Everyone's selling you the AI dream. I'll help you build the real one — implement it in your business, make it work for you, and make sure you don't get taken advantage of along the way.</p>
+      <a href="#ai" class="btn-ghost">Learn more →</a>
+    </div>
+  </section>
+
+  <section class="about" id="about">
+    <div class="about-photo">MARTIN PHOTO</div>
+    <div class="about-content">
+      <div class="mark">/03 · ABOUT</div>
+      <h2>Meet <span class="em">Martin.</span></h2>
+      <p>Martin Raul Gutierrez Chang is a coach, speaker, and founder of HELP. — a brand built on the belief that leadership begins with the courage to ask.</p>
+      <p>He works with founders, teams, and individuals to build systems, ask better questions, and integrate technology (including AI) with wisdom instead of blind trust.</p>
+      <a href="#about">Read the full story →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wordmark">HELP.</div>
+    <div class="tag">Everyone needs it.</div>
+    <div class="links"><a href="#about">About</a><a href="#coaching">Coaching</a><a href="#speaking">Speaking</a><a href="#shop">Shop</a><a href="#connect">Contact</a></div>
+    <div class="copy">© 2026 HELP. by Martin Raul Gutierrez Chang · All rights reserved</div>
+  </footer>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+// GLB SWAP-IN POINT (PHASE 2) — do not remove this block.
+// The procedural characters below are placeholders. They will be
+// replaced with a Meshy AI clay model loaded via GLTFLoader in Phase 2.
+// Keep the makeCharacter() function structure intact.
+
+const OLIVE=0x6b7768,OLIVE_LIGHT=0x8b9a85,OLIVE_DARK=0x4a5548,GREEN_GLOW=0x7fda7f,U=1;
+
+const canvas=document.getElementById('scene');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(0x000000,1);
+renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+
+const scene=new THREE.Scene();
+scene.fog=new THREE.Fog(0x000000,8*U,25*U);
+const camera=new THREE.PerspectiveCamera(45,1,0.1,100);
+camera.position.set(0,3.8*U,8*U);
+
+function resize(){const w=innerWidth,h=innerHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();}
+addEventListener('resize',resize);resize();
+
+scene.add(new THREE.AmbientLight(0x445544,0.5));
+const key=new THREE.DirectionalLight(0xffffff,0.8);
+key.position.set(4,8,4);key.castShadow=true;scene.add(key);
+const glowLight=new THREE.PointLight(GREEN_GLOW,0,15);
+glowLight.position.set(0,3,-8);scene.add(glowLight);
+
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(40,40),new THREE.MeshStandardMaterial({color:0x0a0a0a,roughness:0.9}));
+floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+
+function makeCharacter(shade=OLIVE){
+  const g=new THREE.Group();
+  const mat=new THREE.MeshStandardMaterial({color:shade,roughness:0.7,metalness:0.05});
+  const torso=new THREE.Mesh(new THREE.CapsuleGeometry(0.45,0.9,6,12),mat);
+  torso.position.y=1.5*U;torso.castShadow=true;g.add(torso);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(0.42,20,20),mat);
+  head.position.y=2.6*U;head.castShadow=true;g.add(head);
+  const armGeo=new THREE.CapsuleGeometry(0.14,0.8,4,8);
+  const armL=new THREE.Group();armL.position.set(-0.5,2.1*U,0);
+  const armLmesh=new THREE.Mesh(armGeo,mat);armLmesh.position.y=-0.5;armLmesh.castShadow=true;armL.add(armLmesh);g.add(armL);
+  const armR=new THREE.Group();armR.position.set(0.5,2.1*U,0);
+  const armRmesh=new THREE.Mesh(armGeo,mat);armRmesh.position.y=-0.5;armRmesh.castShadow=true;armR.add(armRmesh);g.add(armR);
+  const legGeo=new THREE.CapsuleGeometry(0.18,0.9,4,8);
+  const legL=new THREE.Mesh(legGeo,mat);legL.position.set(-0.22,0.55*U,0);legL.castShadow=true;g.add(legL);
+  const legR=new THREE.Mesh(legGeo,mat);legR.position.set(0.22,0.55*U,0);legR.castShadow=true;g.add(legR);
+  g.userData.armL=armL;g.userData.armR=armR;g.userData.legL=legL;g.userData.legR=legR;
+  g.userData.seed=Math.random()*Math.PI*2;
+  return g;
+}
+
+const tunnelChars=[];
+const ROWS=6,ROW_SPACING=2.4*U,PAIR_WIDTH=3.2*U;
+for(let i=0;i<ROWS;i++){
+  const z=-3*U-i*ROW_SPACING;
+  const shadeA=[OLIVE,OLIVE_LIGHT,OLIVE_DARK][i%3];
+  const shadeB=[OLIVE_DARK,OLIVE,OLIVE_LIGHT][i%3];
+  const left=makeCharacter(shadeA);left.position.set(-PAIR_WIDTH/2,0,z);left.rotation.y=Math.PI/2*0.15;left.userData.side='L';scene.add(left);tunnelChars.push(left);
+  const right=makeCharacter(shadeB);right.position.set(PAIR_WIDTH/2,0,z);right.rotation.y=-Math.PI/2*0.15;right.userData.side='R';scene.add(right);tunnelChars.push(right);
+}
+const runner=makeCharacter(OLIVE_LIGHT);
+runner.position.set(0,0,-3*U-ROWS*ROW_SPACING-2);scene.add(runner);
+
+let AC=null,masterGain=null,drone=null;
+function initAudio(){if(AC)return;AC=new(window.AudioContext||window.webkitAudioContext)();masterGain=AC.createGain();masterGain.gain.value=0.7;masterGain.connect(AC.destination);}
+function whoosh(){const t=AC.currentTime;const buf=AC.createBuffer(1,AC.sampleRate*0.8,AC.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);const src=AC.createBufferSource();src.buffer=buf;const filt=AC.createBiquadFilter();filt.type='lowpass';filt.Q.value=1;filt.frequency.setValueAtTime(400,t);filt.frequency.exponentialRampToValueAtTime(120,t+0.7);const g=AC.createGain();g.gain.setValueAtTime(0.22,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.75);src.connect(filt);filt.connect(g);g.connect(masterGain);src.start(t);src.stop(t+0.8);const clk=AC.createOscillator();clk.type='triangle';clk.frequency.value=600;const cg=AC.createGain();cg.gain.setValueAtTime(0.15,t);cg.gain.exponentialRampToValueAtTime(0.001,t+0.15);clk.connect(cg);cg.connect(masterGain);clk.start(t);clk.stop(t+0.15);}
+function startDrone(){const t=AC.currentTime;drone={nodes:[]};[55,82.5].forEach(freq=>{const osc=AC.createOscillator();osc.type='sine';osc.frequency.value=freq;const g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.06,t+1.2);osc.connect(g);g.connect(masterGain);osc.start(t);drone.nodes.push({osc,g});});}
+function stopDrone(){if(!drone)return;const t=AC.currentTime;drone.nodes.forEach(n=>{n.g.gain.linearRampToValueAtTime(0,t+0.8);n.osc.stop(t+0.9);});drone=null;}
+function footstep(){if(!AC)return;const t=AC.currentTime;const osc=AC.createOscillator();osc.type='sine';osc.frequency.setValueAtTime(90,t);osc.frequency.exponentialRampToValueAtTime(45,t+0.12);const g=AC.createGain();g.gain.setValueAtTime(0.35,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.13);osc.connect(g);g.connect(masterGain);osc.start(t);osc.stop(t+0.14);if(navigator.vibrate)navigator.vibrate(15);}
+function finaleChord(){const t=AC.currentTime;[261.63,329.63,392.00].forEach(freq=>{const osc=AC.createOscillator();osc.type='triangle';osc.frequency.value=freq;const g=AC.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(0.18,t+0.02);g.gain.exponentialRampToValueAtTime(0.001,t+1.4);osc.connect(g);g.connect(masterGain);osc.start(t);osc.stop(t+1.5);});const sub=AC.createOscillator();sub.type='sine';sub.frequency.value=65;const sg=AC.createGain();sg.gain.setValueAtTime(0.45,t);sg.gain.exponentialRampToValueAtTime(0.001,t+0.6);sub.connect(sg);sg.connect(masterGain);sub.start(t);sub.stop(t+0.65);if(navigator.vibrate)navigator.vibrate([80,40,80,40,60,40,200]);}
+
+let STATE='idle',activationTime=0,runnerSpeed=0;
+const RUNNER_TOP_SPEED=4.5*U;
+const cta=document.getElementById('cta');
+cta.addEventListener('click',activate);
+function activate(){if(STATE!=='idle')return;STATE='activated';activationTime=performance.now()/1000;cta.classList.add('hidden');document.querySelector('#ui .logo').style.opacity='0';initAudio();whoosh();setTimeout(startDrone,250);}
+
+const clock=new THREE.Clock();
+let footstepAccum=0;
+function animate(){
+  requestAnimationFrame(animate);
+  const dt=Math.min(clock.getDelta(),0.05);const t=clock.elapsedTime;
+  if(STATE==='activated'){
+    const elapsed=performance.now()/1000-activationTime;
+    runnerSpeed=Math.min(RUNNER_TOP_SPEED,elapsed*2.2);
+    runner.position.z+=runnerSpeed*dt;
+    const bpm=(runnerSpeed/RUNNER_TOP_SPEED)*4;
+    runner.userData.legL.rotation.x=Math.sin(t*bpm*Math.PI*2)*0.5;
+    runner.userData.legR.rotation.x=-Math.sin(t*bpm*Math.PI*2)*0.5;
+    runner.userData.armL.rotation.x=-Math.sin(t*bpm*Math.PI*2)*0.4;
+    runner.userData.armR.rotation.x=Math.sin(t*bpm*Math.PI*2)*0.4;
+    runner.position.y=Math.abs(Math.sin(t*bpm*Math.PI*2))*0.1;
+    footstepAccum+=dt*bpm*2;
+    if(footstepAccum>=1){footstep();footstepAccum-=1;}
+    tunnelChars.forEach(ch=>{
+      const passed=runner.position.z>ch.position.z-0.5;
+      if(passed&&!ch.userData.celebrating){ch.userData.celebrating=true;ch.userData.celebrateStart=t;}
+      if(ch.userData.celebrating){
+        const dur=t-ch.userData.celebrateStart;const seed=ch.userData.seed;
+        const raise=Math.min(1,dur*3);
+        const wobble=Math.sin(t*4+seed)*0.15*raise;
+        const inward=ch.userData.side==='L'?0.3:-0.3;
+        ch.userData.armL.rotation.z=raise*(1.6+inward)+wobble;
+        ch.userData.armR.rotation.z=-raise*(1.6-inward)-wobble;
+        ch.rotation.y=Math.sin(t*1.5+seed)*0.2;
+        ch.position.y=Math.abs(Math.sin(t*2+seed))*0.08*raise;
+      }
+    });
+    glowLight.intensity=Math.min(2.5,elapsed*0.5);
+    if(runner.position.z>6*U&&STATE==='activated'){STATE='transitioning';triggerWipe();}
+  }
+  renderer.render(scene,camera);
+}
+animate();
+
+function triggerWipe(){
+  finaleChord();
+  const wipe=document.getElementById('wipe');
+  wipe.animate([{transform:'scaleX(0)'},{transform:'scaleX(1)'}],{duration:700,easing:'cubic-bezier(.77,0,.18,1)',fill:'forwards'});
+  setTimeout(()=>{
+    document.getElementById('home').hidden=false;
+    requestAnimationFrame(()=>document.getElementById('home').classList.add('visible'));
+    document.getElementById('landing').classList.add('gone');
+    stopDrone();
+    setTimeout(()=>{document.getElementById('landing').remove();window.scrollTo(0,0);},1000);
+  },700);
+}
+</script>
+</body>
+</html>
+
+═══ END OF FILE — DEPLOY EXACTLY AS WRITTEN ═════════════════════════════
